@@ -2,7 +2,6 @@ package com.arash.edu.statemachinedemo.listener;
 
 import com.arash.edu.statemachinedemo.enums.Events;
 import com.arash.edu.statemachinedemo.enums.States;
-import com.arash.edu.statemachinedemo.service.StateMachineDbManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.statemachine.StateContext;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 public class StateMachineListener extends StateMachineListenerAdapter<States, Events> {
-
-    private final StateMachineDbManager stateMachineDbManager;
 
     @Override
     public void stateContext(StateContext<States, Events> stateContext) {
