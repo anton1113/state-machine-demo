@@ -6,9 +6,11 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EntityScan(basePackages = {
+        "com.arash.edu",
         "org.springframework.statemachine.data.jpa"
 })
 @EnableJpaRepositories(basePackages = {
+        "com.arash.edu",
         "org.springframework.statemachine.data.jpa"
 })
 @SpringBootApplication

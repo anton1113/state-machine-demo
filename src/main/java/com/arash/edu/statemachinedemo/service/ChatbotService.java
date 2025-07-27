@@ -5,7 +5,7 @@ import com.arash.edu.statemachinedemo.enums.States;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.statemachine.StateMachine;
-import org.springframework.statemachine.config.StateMachineFactory;
+import org.springframework.statemachine.service.StateMachineService;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -15,13 +15,13 @@ import java.util.UUID;
 @Service
 public class ChatbotService {
 
-    private final StateMachineFactory<States, Events> factory;
+    private final StateMachineService<States, Events> stateMachineService;
 
     public String processMessage(String message, UUID sessionId) {
-        StateMachine<States, Events> stateMachine = factory.getStateMachine(sessionId.toString());
+        StateMachine<States, Events> stateMachine = stateMachineService.acquireStateMachine(sessionId.toString());
         stateMachine.start();
-        States state = stateMachine.getState().getId();
-        log.info("State is {} for session {}", state, sessionId);
+        log.info("State={}, variables={}", stateMachine.getState().getId(), stateMachine.getExtendedState().getVariables());
+        stateMachine.getExtendedState().getVariables().put("message", message);
         stateMachine.sendEvent(buildEvent(stateMachine.getState().getId()));
         return buildMessage(stateMachine.getState().getId());
     }
