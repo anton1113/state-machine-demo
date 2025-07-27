@@ -2,5 +2,8 @@ package com.arash.edu.statemachinedemo.enums;
 
 public enum Events {
 
-    INITIALIZED, NAME_ASKED, AGE_ASKED, FINALIZED
+    INITIALIZED,
+    NAME_ASKED,
+    AGE_ASKED,
+    FINALIZED
 }

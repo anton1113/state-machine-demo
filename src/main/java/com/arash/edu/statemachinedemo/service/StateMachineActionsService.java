@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.annotation.OnTransition;
 import org.springframework.statemachine.annotation.WithStateMachine;
-import org.springframework.statemachine.data.jpa.JpaStateMachineRepository;
 
 import java.util.UUID;
 
@@ -17,7 +16,6 @@ import java.util.UUID;
 public class StateMachineActionsService {
 
     private final UserRepository userRepository;
-    private final JpaStateMachineRepository jpaStateMachineRepository;
 
     @OnTransition(source = "ASK_NAME")
     public void onNameAsked(StateContext<String, String> stateContext) {

@@ -2,7 +2,6 @@ package com.arash.edu.statemachinedemo.config;
 
 import com.arash.edu.statemachinedemo.enums.Events;
 import com.arash.edu.statemachinedemo.enums.States;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.StateMachineFactory;
@@ -12,12 +11,6 @@ import org.springframework.statemachine.service.StateMachineService;
 
 @Configuration
 public class StateMachineServiceConfig {
-
-    @Autowired
-    private StateMachineFactory<States, Events> stateMachineFactory;
-
-    @Autowired
-    private StateMachineRuntimePersister<States, Events, String> stateMachineRuntimePersister;
 
     @Bean
     public StateMachineService<States, Events> stateMachineService(
