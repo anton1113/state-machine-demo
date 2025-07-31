@@ -3,7 +3,7 @@ package com.arash.edu.statemachinedemo.enums;
 public enum Events {
 
     INITIALIZED,
-    NAME_ASKED,
-    AGE_ASKED,
-    FINALIZED
+    FILTERS_EXTRACTED,
+    RESPONSE_BUILT,
+    RESPONSE_PERSISTED
 }

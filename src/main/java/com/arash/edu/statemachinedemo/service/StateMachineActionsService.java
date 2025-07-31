@@ -1,10 +1,15 @@
 package com.arash.edu.statemachinedemo.service;
 
-import com.arash.edu.statemachinedemo.domain.MyUser;
-import com.arash.edu.statemachinedemo.repository.UserRepository;
+import com.arash.edu.statemachinedemo.domain.db.SearchResponse;
+import com.arash.edu.statemachinedemo.dto.ai.CarSearchFiltersStructuredOutput;
+import com.arash.edu.statemachinedemo.enums.Events;
+import com.arash.edu.statemachinedemo.enums.States;
+import com.arash.edu.statemachinedemo.repository.SearchResponseRepository;
+import com.arash.edu.statemachinedemo.service.ai.FilterExtractionService;
+import com.arash.edu.statemachinedemo.service.link.CarSearchLinkGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.statemachine.StateContext;
+import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.annotation.OnTransition;
 import org.springframework.statemachine.annotation.WithStateMachine;
 
@@ -15,27 +20,29 @@ import java.util.UUID;
 @WithStateMachine
 public class StateMachineActionsService {
 
-    private final UserRepository userRepository;
+    private final FilterExtractionService filterExtractionService;
+    private final CarSearchLinkGenerator carSearchLinkGenerator;
+    private final SearchResponseRepository searchResponseRepository;
 
-    @OnTransition(source = "ASK_NAME")
-    public void onNameAsked(StateContext<String, String> stateContext) {
-        MyUser myUser = getUser(UUID.fromString(stateContext.getStateMachine().getId()));
-        myUser.setName(stateContext.getExtendedState().getVariables().get("message").toString());
-        userRepository.save(myUser);
+    @OnTransition(target = "FILTERS_EXTRACTION")
+    public void onFiltersExtractionEntry(StateMachine<States, Events> stateMachine) {
+        String message = (String) stateMachine.getExtendedState().getVariables().get("message");
+        CarSearchFiltersStructuredOutput carSearchFilters = filterExtractionService.extractFilters(message);
+        stateMachine.getExtendedState().getVariables().put("filters", carSearchFilters);
+        stateMachine.sendEvent(Events.FILTERS_EXTRACTED);
     }
 
-    @OnTransition(source = "ASK_AGE")
-    public void onAgeAsked(StateContext<String, String> stateContext) {
-        MyUser myUser = getUser(UUID.fromString(stateContext.getStateMachine().getId()));
-        myUser.setAge(stateContext.getExtendedState().getVariables().get("message").toString());
-        userRepository.save(myUser);
+    @OnTransition(source = "RESPONSE_BUILDING")
+    public void onResponseBuildingEntry(StateMachine<States, Events> stateMachine) {
+        CarSearchFiltersStructuredOutput carSearchFilters = (CarSearchFiltersStructuredOutput)
+                stateMachine.getExtendedState().getVariables().get("filters");
+        String link = carSearchLinkGenerator.generateCarSearchLink(carSearchFilters.getCars(), carSearchFilters.getFilters());
+        stateMachine.getExtendedState().getVariables().put("link", link);
     }
 
-    private MyUser getUser(UUID sessionId) {
-        return userRepository.findById(sessionId).orElseGet(() -> {
-            MyUser usr = new MyUser();
-            usr.setId(sessionId);
-            return usr;
-        });
+    @OnTransition(source = "RESPONSE_PERSISTING")
+    public void onResponsePersistingEntry(StateMachine<States, Events> stateMachine) {
+        String link = (String) stateMachine.getExtendedState().getVariables().get("link") ;
+        searchResponseRepository.save(new SearchResponse(UUID.randomUUID(), link));
     }
 }

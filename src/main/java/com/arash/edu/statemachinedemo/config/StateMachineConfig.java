@@ -38,18 +38,18 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<States, Ev
         states
                 .withStates()
                 .initial(States.INITIAL)
-                .state(States.ASK_NAME)
-                .state(States.ASK_AGE)
-                .end(States.FINAL);
+                .state(States.FILTERS_EXTRACTION)
+                .state(States.RESPONSE_BUILDING)
+                .end(States.RESPONSE_PERSISTING);
     }
 
     @Override
     public void configure(StateMachineTransitionConfigurer<States, Events> transitions) throws Exception {
         transitions
-                .withExternal().source(States.INITIAL).target(States.ASK_NAME).event(Events.INITIALIZED)
+                .withExternal().source(States.INITIAL).target(States.FILTERS_EXTRACTION).event(Events.INITIALIZED)
                 .and()
-                .withExternal().source(States.ASK_NAME).target(States.ASK_AGE).event(Events.NAME_ASKED)
+                .withExternal().source(States.FILTERS_EXTRACTION).target(States.RESPONSE_BUILDING).event(Events.FILTERS_EXTRACTED)
                 .and()
-                .withExternal().source(States.ASK_AGE).target(States.FINAL).event(Events.AGE_ASKED);
+                .withExternal().source(States.RESPONSE_BUILDING).target(States.RESPONSE_PERSISTING).event(Events.RESPONSE_BUILT);
     }
 }

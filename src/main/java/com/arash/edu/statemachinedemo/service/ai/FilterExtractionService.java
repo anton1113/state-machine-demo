@@ -1,7 +1,7 @@
 package com.arash.edu.statemachinedemo.service.ai;
 
-import com.arash.edu.statemachinedemo.domain.AiStructuredOutput;
-import com.arash.edu.statemachinedemo.domain.AiSystemMessage;
+import com.arash.edu.statemachinedemo.domain.db.AiStructuredOutput;
+import com.arash.edu.statemachinedemo.domain.db.AiSystemMessage;
 import com.arash.edu.statemachinedemo.dto.ai.CarSearchFiltersStructuredOutput;
 import com.arash.edu.statemachinedemo.repository.AiStructuredOutputRepository;
 import com.arash.edu.statemachinedemo.repository.AiSystemMessageRepository;

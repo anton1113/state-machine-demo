@@ -3,7 +3,7 @@ package com.arash.edu.statemachinedemo.enums;
 public enum States {
 
     INITIAL,
-    ASK_NAME,
-    ASK_AGE,
-    FINAL
+    FILTERS_EXTRACTION,
+    RESPONSE_BUILDING,
+    RESPONSE_PERSISTING
 }

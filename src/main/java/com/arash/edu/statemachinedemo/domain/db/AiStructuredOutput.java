@@ -1,4 +1,4 @@
-package com.arash.edu.statemachinedemo.domain;
+package com.arash.edu.statemachinedemo.domain.db;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Data
 @Entity
-public class AiSystemMessage {
+public class AiStructuredOutput {
 
     @Id
     private UUID id;
@@ -17,5 +17,5 @@ public class AiSystemMessage {
     private String key;
 
     @Column(columnDefinition = "TEXT")
-    private String message;
+    private String jsonSchema;
 }

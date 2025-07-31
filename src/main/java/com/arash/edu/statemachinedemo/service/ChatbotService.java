@@ -21,26 +21,11 @@ public class ChatbotService {
         StateMachine<States, Events> stateMachine = stateMachineService.acquireStateMachine(sessionId.toString());
         stateMachine.start();
         log.info("State={}, variables={}", stateMachine.getState().getId(), stateMachine.getExtendedState().getVariables());
-        stateMachine.getExtendedState().getVariables().put("message", message);
-        stateMachine.sendEvent(buildEvent(stateMachine.getState().getId()));
-        return buildMessage(stateMachine.getState().getId());
-    }
-
-    private String buildMessage(States state) {
-        return switch (state) {
-            case INITIAL -> "Hello!";
-            case ASK_NAME -> "What is your name!";
-            case ASK_AGE -> "How old are you?!";
-            case FINAL -> "Bye!";
-        };
-    }
-
-    private Events buildEvent(States state) {
-        return switch (state) {
-            case INITIAL -> Events.INITIALIZED;
-            case ASK_NAME -> Events.NAME_ASKED;
-            case ASK_AGE -> Events.AGE_ASKED;
-            case FINAL -> Events.FINALIZED;
-        };
+        States state = stateMachine.getState().getId();
+        if (States.INITIAL == state) {
+            stateMachine.getExtendedState().getVariables().put("message", message);
+            stateMachine.sendEvent(Events.INITIALIZED);
+        }
+        return "OK";
     }
 }

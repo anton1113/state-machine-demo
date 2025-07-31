@@ -1,6 +1,6 @@
 package com.arash.edu.statemachinedemo.repository;
 
-import com.arash.edu.statemachinedemo.domain.AiStructuredOutput;
+import com.arash.edu.statemachinedemo.domain.db.AiStructuredOutput;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
