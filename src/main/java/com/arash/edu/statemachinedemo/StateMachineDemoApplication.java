@@ -10,8 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "org.springframework.statemachine.data.jpa"
 })
 @EnableJpaRepositories(basePackages = {
-        "com.arash.edu",
-        "org.springframework.statemachine.data.jpa"
+        "com.arash.edu"
 })
 @SpringBootApplication
 public class StateMachineDemoApplication {

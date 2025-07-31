@@ -1,6 +1,5 @@
 package com.arash.edu.statemachinedemo.domain.db;
 
-import com.arash.edu.statemachinedemo.enums.States;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

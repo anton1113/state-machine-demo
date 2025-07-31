@@ -18,7 +18,6 @@ class QueryParamBuilder {
     private static final String URL_ENCODED_SPACE = "%20";
     private static final String MAKE_KEY = "brand%d";
     private static final String MODELS_KEY = "models%d";
-    private static final String SEARCH_TYPE_KEY = "search-type";
 
     List<QueryParam> toMakeModelsFilterQueryParams(@NonNull MakeModelsFilter makeModelsFilter, int index) {
         String makeKey = MAKE_KEY.formatted(index);
