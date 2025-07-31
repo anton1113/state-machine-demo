@@ -26,21 +26,21 @@ public class JpaStateMachinePersister implements StateMachinePersister<States, E
         log.debug("Persisting statemachine with id {} and state {}", stateMachine.getUuid(), stateMachine.getState().getId());
         JpaStateMachine jpaStateMachine = new JpaStateMachine();
         jpaStateMachine.setId(stateMachine.getUuid());
-        jpaStateMachine.setState(stateMachine.getState().getId());
+        jpaStateMachine.setState(stateMachine.getState().getId().toString());
         jpaStateMachine.setContext(stateMachine.getExtendedState().getVariables());
         jpaStateMachineRepository.save(jpaStateMachine);
     }
 
     @Override
     public StateMachine<States, Events> restore(StateMachine<States, Events> stateMachine, Map<Object, Object> contextObj) {
-        log.debug("Restoring statemachine with id {} and state {}", stateMachine.getId(), stateMachine.getState().getId());
+        log.debug("Restoring statemachine with id {}", stateMachine.getUuid());
         jpaStateMachineRepository.findById(stateMachine.getUuid()).ifPresent(
                 jpaStateMachine -> {
                     stateMachine.getStateMachineAccessor().doWithAllRegions(
                             access -> {
                                 access.resetStateMachine(
                                         new DefaultStateMachineContext<>(
-                                                jpaStateMachine.getState(),
+                                                States.valueOf(jpaStateMachine.getState()),
                                                 null,
                                                 null,
                                                 new DefaultExtendedState(jpaStateMachine.getContext())
@@ -51,5 +51,10 @@ public class JpaStateMachinePersister implements StateMachinePersister<States, E
                 }
         );
         return stateMachine;
+    }
+
+    public void destroy(StateMachine<States, Events> stateMachine) {
+        log.debug("Destroying statemachine with id {} and state {}", stateMachine.getId(), stateMachine.getState().getId());
+        jpaStateMachineRepository.deleteById(stateMachine.getUuid());
     }
 }

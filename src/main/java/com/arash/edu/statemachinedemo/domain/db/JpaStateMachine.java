@@ -18,7 +18,7 @@ public class JpaStateMachine {
     @Id
     private UUID id;
 
-    private States state;
+    private String state;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")

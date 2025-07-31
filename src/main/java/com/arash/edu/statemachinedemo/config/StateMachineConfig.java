@@ -22,7 +22,7 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<States, Ev
     public void configure(StateMachineConfigurationConfigurer<States, Events> config) throws Exception {
         config
                 .withConfiguration()
-                .autoStartup(true)
+                .autoStartup(false)
                 .listener(stateMachineListener);
     }
 
@@ -32,8 +32,8 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<States, Ev
                 .withStates()
                 .initial(States.INITIAL)
                 .state(States.FILTERS_EXTRACTION)
-                .state(States.RESPONSE_BUILDING)
-                .end(States.RESPONSE_PERSISTING);
+                .state(States.LINK_GENERATION)
+                .end(States.FINAL);
     }
 
     @Override
@@ -41,8 +41,8 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<States, Ev
         transitions
                 .withExternal().source(States.INITIAL).target(States.FILTERS_EXTRACTION).event(Events.INITIALIZED)
                 .and()
-                .withExternal().source(States.FILTERS_EXTRACTION).target(States.RESPONSE_BUILDING).event(Events.FILTERS_EXTRACTED)
+                .withExternal().source(States.FILTERS_EXTRACTION).target(States.LINK_GENERATION).event(Events.FILTERS_EXTRACTED)
                 .and()
-                .withExternal().source(States.RESPONSE_BUILDING).target(States.RESPONSE_PERSISTING).event(Events.RESPONSE_BUILT);
+                .withExternal().source(States.LINK_GENERATION).target(States.FINAL).event(Events.LINK_GENERATED);
     }
 }
