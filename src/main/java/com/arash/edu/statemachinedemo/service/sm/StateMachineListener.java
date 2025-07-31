@@ -1,4 +1,4 @@
-package com.arash.edu.statemachinedemo.listener;
+package com.arash.edu.statemachinedemo.service.sm;
 
 import com.arash.edu.statemachinedemo.enums.Events;
 import com.arash.edu.statemachinedemo.enums.States;
@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class StateMachineListener extends StateMachineListenerAdapter<States, Events> {
 
+    private final JpaStateMachinePersister jpaStateMachinePersister;
+
     @Override
     public void stateContext(StateContext<States, Events> stateContext) {
         if (stateContext.getStateMachine().getState() == null) {
@@ -22,10 +24,12 @@ public class StateMachineListener extends StateMachineListenerAdapter<States, Ev
         switch (stateContext.getStage()) {
             case STATE_ENTRY: {
                 log.info("State {} entry", stateContext.getStateMachine().getState().getId());
+                jpaStateMachinePersister.persist(stateContext.getStateMachine(), stateContext.getExtendedState().getVariables());
                 break;
             }
             case EXTENDED_STATE_CHANGED: {
                 log.info("Extended state changed, {}", stateContext.getStateMachine().getExtendedState().getVariables());
+                jpaStateMachinePersister.persist(stateContext.getStateMachine(), stateContext.getExtendedState().getVariables());
                 break;
             }
         }
