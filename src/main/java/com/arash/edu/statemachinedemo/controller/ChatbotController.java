@@ -17,11 +17,21 @@ public class ChatbotController {
     private final ChatbotService chatbotService;
 
     @PostMapping("/message")
-    public ChatbotResponseDTO sendMessage(@RequestBody ChatbotMessageDTO chatbotMessageDTO) {
-        ChatbotResponseDTO responseDTO = new ChatbotResponseDTO();
-        responseDTO.setMessage(chatbotService.processMessage(
-                chatbotMessageDTO.getMessage() ,chatbotMessageDTO.getSessionId())
+    public void sendMessage(@RequestBody ChatbotMessageDTO chatbotMessageDTO) {
+        chatbotService.processMessage(
+                chatbotMessageDTO.getMessage(),
+                chatbotMessageDTO.getSessionId()
         );
+    }
+
+    @PostMapping("/message/sync")
+    public ChatbotResponseDTO sendMessageSync(@RequestBody ChatbotMessageDTO chatbotMessageDTO) {
+        String response = chatbotService.processMessageSync(
+                chatbotMessageDTO.getMessage(),
+                chatbotMessageDTO.getSessionId()
+        );
+        ChatbotResponseDTO responseDTO = new ChatbotResponseDTO();
+        responseDTO.setMessage(response);
         return responseDTO;
     }
 }

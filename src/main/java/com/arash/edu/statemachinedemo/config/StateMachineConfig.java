@@ -2,8 +2,11 @@ package com.arash.edu.statemachinedemo.config;
 
 import com.arash.edu.statemachinedemo.enums.Events;
 import com.arash.edu.statemachinedemo.enums.States;
+import com.arash.edu.statemachinedemo.service.action.FilterExtractionAction;
+import com.arash.edu.statemachinedemo.service.action.FinalAction;
+import com.arash.edu.statemachinedemo.service.action.LinkGenerationAction;
 import com.arash.edu.statemachinedemo.service.sm.StateMachineListener;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
@@ -11,12 +14,16 @@ import org.springframework.statemachine.config.builders.StateMachineConfiguratio
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
+@RequiredArgsConstructor
 @Configuration
 @EnableStateMachineFactory
 public class StateMachineConfig extends StateMachineConfigurerAdapter<States, Events> {
 
-    @Autowired
-    private StateMachineListener stateMachineListener;
+    private final StateMachineListener stateMachineListener;
+
+    private final FilterExtractionAction filterExtractionAction;
+    private final LinkGenerationAction linkGenerationAction;
+    private final FinalAction finalAction;
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<States, Events> config) throws Exception {
@@ -31,8 +38,9 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<States, Ev
         states
                 .withStates()
                 .initial(States.INITIAL)
-                .state(States.FILTERS_EXTRACTION)
-                .state(States.LINK_GENERATION)
+                .stateEntry(States.FILTERS_EXTRACTION, filterExtractionAction)
+                .stateEntry(States.LINK_GENERATION, linkGenerationAction)
+                .stateEntry(States.FINAL, finalAction)
                 .end(States.FINAL);
     }
 
