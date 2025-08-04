@@ -17,12 +17,12 @@ import java.util.UUID;
 public class StateMachineService {
 
     private final StateMachineFactory<States, Events> stateMachineFactory;
-    private final JpaStateMachinePersister stateMachinePersister;
+    private final JpaStateMachineService stateMachinePersister;
 
     public StateMachine<States, Events> getStateMachine(@NonNull UUID id) {
         log.debug("Get statemachine with id {}", id);
         StateMachine<States, Events> stateMachine = stateMachineFactory.getStateMachine(id);
-        stateMachinePersister.restore(stateMachine, null);
+        stateMachinePersister.restore(stateMachine);
         stateMachine.startReactively().subscribe();
         return stateMachine;
     }

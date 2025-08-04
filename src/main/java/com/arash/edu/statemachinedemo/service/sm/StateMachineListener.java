@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class StateMachineListener extends StateMachineListenerAdapter<States, Events> {
 
-    private final JpaStateMachinePersister jpaStateMachinePersister;
+    private final JpaStateMachineService jpaStateMachineService;
 
     @Override
     public void stateContext(StateContext<States, Events> stateContext) {
@@ -28,13 +28,13 @@ public class StateMachineListener extends StateMachineListenerAdapter<States, Ev
                 if (stateContext.getStateMachine().getState().getId() == States.INITIAL) {
                     // skip persistence
                 } else {
-                    jpaStateMachinePersister.persist(stateContext.getStateMachine(), stateContext.getExtendedState().getVariables());
+                    jpaStateMachineService.persistState(stateContext.getStateMachine());
                 }
                 break;
             }
             case EXTENDED_STATE_CHANGED: {
                 log.info("Extended state changed, {}", stateContext.getStateMachine().getExtendedState().getVariables());
-                jpaStateMachinePersister.persist(stateContext.getStateMachine(), stateContext.getExtendedState().getVariables());
+                jpaStateMachineService.persistContext(stateContext.getStateMachine());
                 break;
             }
         }
