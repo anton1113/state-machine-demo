@@ -5,5 +5,6 @@ public enum States {
     INITIAL,
     FILTERS_EXTRACTION,
     LINK_GENERATION,
+    RESPONSE_BUILDING,
     FINAL
 }

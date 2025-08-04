@@ -23,7 +23,7 @@ public class StateMachineService {
         log.debug("Get statemachine with id {}", id);
         StateMachine<States, Events> stateMachine = stateMachineFactory.getStateMachine(id);
         stateMachinePersister.restore(stateMachine, null);
-        stateMachine.start();
+        stateMachine.startReactively().subscribe();
         return stateMachine;
     }
 }

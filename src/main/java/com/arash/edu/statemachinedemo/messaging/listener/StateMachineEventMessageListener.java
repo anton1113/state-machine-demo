@@ -8,8 +8,10 @@ import com.arash.edu.statemachinedemo.service.sm.StateMachineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,6 +24,6 @@ public class StateMachineEventMessageListener {
     public void onMessage(StateMachineEventMessage message) {
         log.info("Received StateMachineEventMessage {}", message);
         StateMachine<States, Events> stateMachine = stateMachineService.getStateMachine(message.getId());
-        stateMachine.sendEvent(message.getEvent());
+        stateMachine.sendEvent(Mono.just(new GenericMessage<>(message.getEvent()))).subscribe();
     }
 }

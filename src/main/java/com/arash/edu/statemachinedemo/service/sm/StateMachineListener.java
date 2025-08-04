@@ -22,9 +22,12 @@ public class StateMachineListener extends StateMachineListenerAdapter<States, Ev
             return;
         }
         switch (stateContext.getStage()) {
-            case TRANSITION_END: {
-                if (stateContext.getTransition() != null && stateContext.getTransition().getSource() != null) {
-                    log.info("Transition end, source {}, target {}", stateContext.getTransition().getSource().getId(), stateContext.getTransition().getTarget().getId());
+            case STATE_ENTRY: {
+                States state = stateContext.getStateMachine().getState().getId();
+                log.info("State entry {}", state);
+                if (stateContext.getStateMachine().getState().getId() == States.INITIAL) {
+                    // skip persistence
+                } else {
                     jpaStateMachinePersister.persist(stateContext.getStateMachine(), stateContext.getExtendedState().getVariables());
                 }
                 break;

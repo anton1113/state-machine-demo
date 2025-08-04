@@ -2,9 +2,7 @@ package com.arash.edu.statemachinedemo.config;
 
 import com.arash.edu.statemachinedemo.enums.Events;
 import com.arash.edu.statemachinedemo.enums.States;
-import com.arash.edu.statemachinedemo.service.action.FilterExtractionAction;
-import com.arash.edu.statemachinedemo.service.action.FinalAction;
-import com.arash.edu.statemachinedemo.service.action.LinkGenerationAction;
+import com.arash.edu.statemachinedemo.service.action.*;
 import com.arash.edu.statemachinedemo.service.sm.StateMachineListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +21,8 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<States, Ev
 
     private final FilterExtractionAction filterExtractionAction;
     private final LinkGenerationAction linkGenerationAction;
+    private final ResponseBuildingAction responseBuildingAction;
+    private final SearchResultPersistenceAction searchResultPersistenceAction;
     private final FinalAction finalAction;
 
     @Override
@@ -40,6 +40,8 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<States, Ev
                 .initial(States.INITIAL)
                 .stateEntry(States.FILTERS_EXTRACTION, filterExtractionAction)
                 .stateEntry(States.LINK_GENERATION, linkGenerationAction)
+                .stateEntry(States.RESPONSE_BUILDING, responseBuildingAction)
+                .stateExit(States.RESPONSE_BUILDING, searchResultPersistenceAction)
                 .stateEntry(States.FINAL, finalAction)
                 .end(States.FINAL);
     }
@@ -51,6 +53,8 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<States, Ev
                 .and()
                 .withExternal().source(States.FILTERS_EXTRACTION).target(States.LINK_GENERATION).event(Events.FILTERS_EXTRACTED)
                 .and()
-                .withExternal().source(States.LINK_GENERATION).target(States.FINAL).event(Events.LINK_GENERATED);
+                .withExternal().source(States.LINK_GENERATION).target(States.RESPONSE_BUILDING).event(Events.LINK_GENERATED)
+                .and()
+                .withExternal().source(States.RESPONSE_BUILDING).target(States.FINAL).event(Events.RESPONSE_BUILT);
     }
 }

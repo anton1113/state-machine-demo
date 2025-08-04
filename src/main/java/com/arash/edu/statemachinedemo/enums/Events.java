@@ -4,5 +4,6 @@ public enum Events {
 
     INITIALIZED,
     FILTERS_EXTRACTED,
-    LINK_GENERATED
+    LINK_GENERATED,
+    RESPONSE_BUILT
 }
