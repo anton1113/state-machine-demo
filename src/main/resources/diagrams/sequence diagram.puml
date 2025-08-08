@@ -1,0 +1,20 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+participant Listener as l
+participant StateMachine as sm
+participant Action as a
+participant Postgres as pg
+participant SQS
+
+sm -> pg: state_entry
+sm -> a: state_entry
+a -> pg: context_change
+a -> SQS: Message<StateMachineEvent>
+l -> sm: StateMachineEvent
+pg -> sm: JpaStateMachine
+sm -> a: state_entry
+
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+participant Listener as l
+participant ServiceLayer as sl
+participant StateMachine as sm
+participant Postgres as pg
+participant StateMachineFactory as smf
+
+l -> sl: prompt, conversationId
+sl -> pg: findById: conversationId
+
+alt entity_found
+    pg -> sl: JpaStateMachine
+else entity_not_found
+    smf -> sl: StateMachine
+end
+
+sl -> sm: send event "PROMPT_RECEIVED"
+
+@enduml

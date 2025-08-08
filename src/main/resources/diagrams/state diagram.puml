@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+[*] --> FiltersExtraction: prompt_received
+FiltersExtraction: message: String
+FiltersExtraction: prevFilters: FilterExtractionStructuredOutput
+FiltersExtraction --> MappingClarification: filters_ambiguous
+MappingClarification: filters: FilterExtractionStructuredOutput
+FiltersExtraction --> ResponseBuilding: filters_clear
+MappingClarification --> ResponseBuilding: filters_clear
+ResponseBuilding: filters: FilterExtractionStructuredOutput
+ResponseBuilding --> ResponseSending: response_built
+ResponseSending: response: String
+ResponseSending: properties: Map<String, Object>
+ResponseSending --> AdditionalPromptAwaiting: response_sent
+
+AdditionalPromptAwaiting: prevFilters: FilterExtractionStructuredOutput
+AdditionalPromptAwaiting --> [*]: after (60s)
+AdditionalPromptAwaiting --> FiltersExtraction: prompt_received
+
+@enduml
